@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://vamosiart.hu/</loc>
+    <lastmod>2026-11-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://vamosiart.hu/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vamosiart.hu/en/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vamosiart.hu/de/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vamosiart.hu/"/>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://vamosiart.hu/en/</loc>
+    <lastmod>2026-11-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://vamosiart.hu/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vamosiart.hu/en/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vamosiart.hu/de/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vamosiart.hu/"/>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://vamosiart.hu/de/</loc>
+    <lastmod>2026-11-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://vamosiart.hu/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vamosiart.hu/en/"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vamosiart.hu/de/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vamosiart.hu/"/>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://vamosiart.hu/festmenyek.html</loc>
+    <lastmod>2026-11-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://vamosiart.hu/festmenyek.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vamosiart.hu/en/paintings.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vamosiart.hu/de/gemaelde.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vamosiart.hu/festmenyek.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vamosiart.hu/en/paintings.html</loc>
+    <lastmod>2026-11-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://vamosiart.hu/festmenyek.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vamosiart.hu/en/paintings.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vamosiart.hu/de/gemaelde.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vamosiart.hu/festmenyek.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vamosiart.hu/de/gemaelde.html</loc>
+    <lastmod>2026-11-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://vamosiart.hu/festmenyek.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vamosiart.hu/en/paintings.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vamosiart.hu/de/gemaelde.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vamosiart.hu/festmenyek.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vamosiart.hu/elado.html</loc>
+    <lastmod>2026-11-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://vamosiart.hu/elado.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vamosiart.hu/en/for-sale.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vamosiart.hu/de/zu-verkaufen.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vamosiart.hu/elado.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vamosiart.hu/en/for-sale.html</loc>
+    <lastmod>2026-11-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://vamosiart.hu/elado.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vamosiart.hu/en/for-sale.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vamosiart.hu/de/zu-verkaufen.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vamosiart.hu/elado.html"/>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://vamosiart.hu/de/zu-verkaufen.html</loc>
+    <lastmod>2026-11-14</lastmod>
+    <xhtml:link rel="alternate" hreflang="hu" href="https://vamosiart.hu/elado.html"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://vamosiart.hu/en/for-sale.html"/>
+    <xhtml:link rel="alternate" hreflang="de" href="https://vamosiart.hu/de/zu-verkaufen.html"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://vamosiart.hu/elado.html"/>
+    <priority>0.8</priority>
+  </url>
+</urlset>

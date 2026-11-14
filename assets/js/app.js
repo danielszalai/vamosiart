@@ -71,10 +71,11 @@
   };
   var LANGS = ["hu", "en", "de"];
   var page = document.body.getAttribute("data-page");
+  var ROOT = document.body.getAttribute("data-root") || ""; // "../" az /en/ és /de/ oldalakon
+  function src(p) { return !p ? "" : /^(https?:)?\/\//.test(p) || p.charAt(0) === "/" ? p : ROOT + p; }
   var state = { lang: "hu", site: null, paintings: [], lbList: [], lbIndex: 0 };
 
   /* ---------- Segédfüggvények ---------- */
-  function store(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } }
   function t(key) { return (I18N[state.lang] && I18N[state.lang][key]) || I18N.hu[key] || key; }
   function loc(obj) { // többnyelvű mező: ha nincs fordítás, magyar
     if (!obj) return "";
@@ -100,29 +101,15 @@
     return "mailto:" + email + "?subject=" + encodeURIComponent(subj);
   }
 
-  /* ---------- Nyelv ---------- */
-  function pickLang() {
-    var q = new URLSearchParams(location.search).get("lang");
-    if (q && LANGS.indexOf(q) >= 0) return q;
-    var s = store("lang");
-    if (s && LANGS.indexOf(s) >= 0) return s;
-    var nav = (navigator.language || "hu").slice(0, 2).toLowerCase();
-    return LANGS.indexOf(nav) >= 0 ? nav : "hu";
-  }
-  function applyLang() {
-    document.documentElement.lang = state.lang;
-    $all("[data-i18n]").forEach(function (el) { el.textContent = t(el.getAttribute("data-i18n")); });
-    $all("[data-i18n-alt]").forEach(function (el) { el.alt = t(el.getAttribute("data-i18n-alt")); });
-    $all(".langs button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.dataset.lang === state.lang)); });
+  /* ---------- Nyelv: az oldal címe határozza meg (/, /en/, /de/) ---------- */
+  function applyLabels() {
     var lb = $("#lightbox");
     if (lb) {
       $(".lb-close", lb).setAttribute("aria-label", t("close"));
       $(".lb-prev", lb).setAttribute("aria-label", t("prev"));
       $(".lb-next", lb).setAttribute("aria-label", t("next"));
     }
-    render();
   }
-  function setLang(l) { state.lang = l; store("lang", l); applyLang(); }
 
   /* ---------- Oldalak kirajzolása ---------- */
   function render() {
@@ -144,9 +131,11 @@
       return "<p>" + esc(p.trim()).replace(/\n/g, "<br>") + "</p>";
     }).join("");
     var c = $(".js-commission"); if (c) c.textContent = loc(state.site.commission);
+    var sg = $(".js-signature");
+    if (sg && state.site.signature && sg.getAttribute("src") !== src(state.site.signature)) sg.src = src(state.site.signature);
     var hi = $(".js-home-image");
-    if (hi && state.site.homeImage && hi.getAttribute("src") !== state.site.homeImage) {
-      hi.src = state.site.homeImage;
+    if (hi && state.site.homeImage && hi.getAttribute("src") !== src(state.site.homeImage)) {
+      hi.src = src(state.site.homeImage);
       if (state.site.homeImageWidth) { hi.width = state.site.homeImageWidth; hi.height = state.site.homeImageHeight; }
     }
     var ig = $(".js-instagram");
@@ -162,7 +151,7 @@
   function tileHTML(p, i) {
     var w = p.width || 800, h = p.height || 1000;
     return '<button class="tile reveal" type="button" data-i="' + i + '">' +
-      '<div class="frame"><img loading="lazy" decoding="async" src="' + esc(p.thumb || p.image) + '" width="' + w + '" height="' + h + '" alt="' + esc(titleOf(p)) + '"></div>' +
+      '<div class="frame"><img loading="lazy" decoding="async" src="' + esc(src(p.thumb || p.image)) + '" width="' + w + '" height="' + h + '" alt="' + esc(titleOf(p)) + '"></div>' +
       '<div class="cap"><span class="t">' + esc(titleOf(p)) + "</span>" +
       '<span class="m">' + esc([p.size].filter(Boolean).join("")) + "</span></div></button>";
   }
@@ -200,7 +189,7 @@
       return '<article class="card reveal' + (p.sold ? " sold" : "") + '">' +
         '<button class="img-btn" type="button" data-i="' + i + '" aria-label="' + esc(titleOf(p)) + '">' +
         (p.sold ? '<span class="badge">' + esc(t("sold")) + "</span>" : "") +
-        '<div class="img-wrap"><img loading="lazy" decoding="async" src="' + esc(p.thumb || p.image) + '" alt="' + esc(titleOf(p)) + '"></div></button>' +
+        '<div class="img-wrap"><img loading="lazy" decoding="async" src="' + esc(src(p.thumb || p.image)) + '" alt="' + esc(titleOf(p)) + '"></div></button>' +
         "<h3>" + esc(titleOf(p)) + "</h3>" +
         '<p class="meta">' + esc(metaOf(p)) + "</p>" +
         (p.sold ? '<p class="price note">' + esc(t("sold")) + "</p>"
@@ -218,14 +207,14 @@
     lbImg.style.opacity = 0;
     var img = new Image();
     img.onload = function () { lbImg.src = img.src; lbImg.alt = titleOf(p); lbImg.style.opacity = 1; };
-    img.src = p.image;
+    img.src = src(p.image);
     var status = "";
     if (p.forSale) status = p.sold ? t("sold") : t("forSale") + (priceOf(p).note ? "" : " · " + priceOf(p).text);
     $(".lb-cap", lb).innerHTML = '<div class="t">' + esc(titleOf(p)) + '</div><div class="m">' + esc(metaOf(p)) + "</div>" +
       (status ? '<span class="s">' + esc(status) + "</span>" : "");
     $(".lb-count", lb).textContent = (state.lbIndex + 1) + " / " + state.lbList.length;
     // a következő kép előtöltése
-    var n = state.lbList[(state.lbIndex + 1) % state.lbList.length]; if (n) { var pre = new Image(); pre.src = n.image; }
+    var n = state.lbList[(state.lbIndex + 1) % state.lbList.length]; if (n) { var pre = new Image(); pre.src = src(n.image); }
   }
   function openLB(i) {
     if (!lb) return;
@@ -278,13 +267,12 @@
     var open = document.body.classList.toggle("menu-open");
     toggle.setAttribute("aria-expanded", String(open));
   });
-  $all(".langs button").forEach(function (b) { b.addEventListener("click", function () { setLang(b.dataset.lang); }); });
-
   /* ---------- Indulás ---------- */
-  state.lang = pickLang();
-  applyLang();
-  var jobs = [getJSON("data/site.json").then(function (d) { state.site = d; }).catch(function () {})];
-  if (page !== "home") jobs.push(getJSON("data/paintings.json").then(function (d) {
+  state.lang = LANGS.indexOf(document.documentElement.lang) >= 0 ? document.documentElement.lang : "hu";
+  applyLabels();
+  observeReveal();
+  var jobs = [getJSON(ROOT + "data/site.json").then(function (d) { state.site = d; }).catch(function () {})];
+  if (page !== "home") jobs.push(getJSON(ROOT + "data/paintings.json").then(function (d) {
     state.paintings = (d && d.paintings) || [];
   }).catch(function () {
     var box = $(".js-gallery") || $(".js-sale");

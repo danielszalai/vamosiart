@@ -67,3 +67,6 @@ details.tr[open] summary{margin-bottom:16px}
 @media(max-width:600px){.plist li{flex-wrap:wrap}.plist .ops{width:100%}.plist .ops .btn{flex:1;text-align:center}.plist .ops form{flex:1;display:flex}.plist .ops form .btn{flex:1}}
 .home-drop{min-height:200px;max-width:420px;margin-bottom:10px}
 .home-drop .preview img{max-height:280px}
+.sig-drop{min-height:120px;max-width:420px;margin-bottom:10px;background:#f3f1f4}
+.sig-drop .preview img{max-height:120px;box-shadow:none;mix-blend-mode:multiply}
+h2.first{margin-top:0}

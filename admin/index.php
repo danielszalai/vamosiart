@@ -23,6 +23,8 @@ session_start();
 header('X-Frame-Options: DENY');
 header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: same-origin');
+header("Content-Security-Policy: default-src 'self'; img-src 'self' blob: data:; style-src 'self'; script-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'");
+header('Cache-Control: no-store');
 
 /* ---------- segédfüggvények ---------- */
 function h($s): string { return htmlspecialchars((string)$s, ENT_QUOTES, 'UTF-8'); }
@@ -67,7 +69,7 @@ function tri(string $prefix): array { // három nyelvű mező a POST-ból
 
 /* Feltöltött kép mentése. Ha a böngésző már kicsinyítette, azt menti;
    ha nem, és van GD a szerveren, itt kicsinyít. */
-function save_image(array $file, string $base, int $maxSide): ?array {
+function save_image(array $file, string $base, int $maxSide, bool $keepOriginal = false): ?array {
   if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) return null;
   if ($file['error'] !== UPLOAD_ERR_OK) {
     $msg = in_array($file['error'], [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE], true) ? 'A kép túl nagy a szervernek.' : 'A kép feltöltése nem sikerült (hibakód: ' . $file['error'] . ').';
@@ -81,7 +83,7 @@ function save_image(array $file, string $base, int $maxSide): ?array {
   $ext = $types[$info[2]];
   $dest = $base . '.' . $ext;
 
-  if (max($w, $h) > $maxSide && function_exists('imagecreatetruecolor')) {
+  if (!$keepOriginal && max($w, $h) > $maxSide && function_exists('imagecreatetruecolor')) {
     $src = $ext === 'jpg' ? @imagecreatefromjpeg($file['tmp_name']) : ($ext === 'png' ? @imagecreatefrompng($file['tmp_name']) : @imagecreatefromwebp($file['tmp_name']));
     if ($src) {
       if ($ext === 'jpg' && function_exists('exif_read_data')) { // telefonos fotók elforgatása
@@ -113,6 +115,24 @@ function delete_files(array $p): void {
   }
 }
 
+/* ---------- próbálkozás-korlát (IP-címenként, fájlban, nem a munkamenetben) ---------- */
+const LIMIT_FILE = __DIR__ . '/.belepesek.json';
+const LIMIT_MAX = 5;          // ennyi hibás jelszó után…
+const LIMIT_WINDOW = 900;     // …15 percig tiltás
+function limit_read(): array {
+  $d = is_file(LIMIT_FILE) ? json_decode((string)@file_get_contents(LIMIT_FILE), true) : [];
+  $now = time(); $out = [];
+  foreach ((array)$d as $k => $list) { $list = array_values(array_filter((array)$list, function ($t) use ($now) { return $now - (int)$t < LIMIT_WINDOW; })); if ($list) $out[$k] = $list; }
+  return $out;
+}
+function limit_key(): string { return hash('sha256', ($_SERVER['REMOTE_ADDR'] ?? '') . '|vamosi'); }
+function limit_blocked(): bool { $d = limit_read(); return count($d[limit_key()] ?? []) >= LIMIT_MAX || count($d['*'] ?? []) >= 50; }
+function limit_fail(): void {
+  $d = limit_read(); $d[limit_key()][] = time(); $d['*'][] = time(); // '*' = összes IP együtt (elosztott próbálkozás ellen)
+  @file_put_contents(LIMIT_FILE, json_encode($d), LOCK_EX);
+}
+function limit_clear(): void { $d = limit_read(); unset($d[limit_key()]); @file_put_contents(LIMIT_FILE, json_encode($d), LOCK_EX); }
+
 /* ---------- belépés ---------- */
 $action = $_GET['a'] ?? 'list';
 $hasPass = is_file(PASS_FILE);
@@ -125,24 +145,28 @@ if (!$hasPass && $action === 'setup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   if (!is_writable(__DIR__)) { flash('Az "admin" mappa nem írható, így a jelszót nem tudom elmenteni.', 'err'); go(); }
   file_put_contents(PASS_FILE, "<?php return " . var_export(password_hash($p1, PASSWORD_DEFAULT), true) . ";\n");
   @chmod(PASS_FILE, 0600);
-  session_regenerate_id(true); $_SESSION['ok'] = true;
+  session_regenerate_id(true); $_SESSION['ok'] = true; $_SESSION['seen'] = time();
   flash('Jelszó elmentve. Üdv az admin felületen!'); go();
 }
 if ($hasPass && $action === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
   check_csrf();
-  $tries = $_SESSION['tries'] ?? 0;
-  if ($tries >= 5 && time() - ($_SESSION['last_try'] ?? 0) < 300) { flash('Túl sok próbálkozás. Várj 5 percet.', 'err'); go(); }
+  if (limit_blocked()) { sleep(2); flash('Túl sok hibás próbálkozás. Várj 15 percet.', 'err'); go(); }
   $hash = require PASS_FILE;
   if (password_verify((string)($_POST['pass'] ?? ''), (string)$hash)) {
-    session_regenerate_id(true); $_SESSION['ok'] = true; $_SESSION['tries'] = 0; go();
+    limit_clear(); session_regenerate_id(true); $_SESSION['ok'] = true; $_SESSION['seen'] = time(); go();
   }
-  sleep(1);
-  $_SESSION['tries'] = $tries + 1; $_SESSION['last_try'] = time();
+  limit_fail(); sleep(2);
   flash('Hibás jelszó.', 'err'); go();
 }
 if ($action === 'logout') { $_SESSION = []; session_destroy(); go(); }
 
 $logged = !empty($_SESSION['ok']) && $hasPass;
+if ($logged && time() - (int)($_SESSION['seen'] ?? 0) > 7200) { // 2 óra tétlenség után kilép
+  $_SESSION = []; session_regenerate_id(true); $logged = false; flash('Biztonsági okból kiléptettünk, lépj be újra.', 'err');
+}
+if ($logged) $_SESSION['seen'] = time();
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+$isLocal = in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true);
 
 /* ---------- műveletek (csak belépve) ---------- */
 if ($logged && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -205,6 +229,12 @@ if ($logged && $_SERVER['REQUEST_METHOD'] === 'POST') {
       $site['homeImage'] = 'uploads/' . $img['file'];
       $site['homeImageWidth'] = $img['w']; $site['homeImageHeight'] = $img['h'];
     }
+    $sig = save_image($_FILES['signature'] ?? [], UPLOADS . '/alairas-' . substr(bin2hex(random_bytes(3)), 0, 5), 1600, true);
+    if ($sig) {
+      $old = (string)($site['signature'] ?? '');
+      if (strpos($old, 'uploads/alairas-') === 0) delete_files(['image' => $old]);
+      $site['signature'] = 'uploads/' . $sig['file'];
+    }
     write_json(SITE_FILE, $site);
     flash('Főoldal elmentve.'); go('a=texts');
   }
@@ -245,6 +275,7 @@ $uploadLimit = ini_get('upload_max_filesize');
   <?php endif; ?>
 </header>
 <main>
+<?php if (!$isHttps && !$isLocal): ?><div class="flash err">Figyelem: az oldal nem titkosított (https) kapcsolaton fut, így a jelszó lehallgatható. Kapcsold be az SSL-t a tárhelyen, mielőtt itt belépsz.</div><?php endif; ?>
 <?php if ($flash): ?><div class="flash <?= h($flash[1]) ?>"><?= h($flash[0]) ?></div><?php endif; ?>
 
 <?php if (!$hasPass): ?>
@@ -347,12 +378,20 @@ $uploadLimit = ini_get('upload_max_filesize');
     <h1>Főoldal</h1>
     <form method="post" action="index.php?a=texts" enctype="multipart/form-data" id="homeForm">
       <input type="hidden" name="csrf" value="<?= h(csrf()) ?>">
-      <h2 style="margin-top:0">Főoldali kép</h2>
+      <h2 class="first">Főoldali kép</h2>
       <p class="hint">A bemutatkozás mellett álló kép. Álló formátum mutat a legjobban.</p>
       <label class="drop home-drop" id="homeDrop">
         <span class="preview"><img id="homePreview" src="<?= !empty($site['homeImage']) ? '../' . h($site['homeImage']) : '' ?>" alt="" <?= empty($site['homeImage']) ? 'hidden' : '' ?>></span>
         <span class="drop-txt">Kép cseréje: kattints vagy húzd ide</span>
         <input type="file" name="homeImage" id="homeInput" accept="image/jpeg,image/png,image/webp">
+      </label>
+      <h2>Aláírás</h2>
+      <p class="hint">Legjobb az átlátszó hátterű PNG. Fehér papírról fotózott vagy szkennelt aláírás is jó: a fehér háttér az oldalon nem látszik.</p>
+      <?php $sigSrc = !empty($site['signature']) ? '../' . $site['signature'] : '../assets/img/alairas.png'; ?>
+      <label class="drop sig-drop" id="sigDrop">
+        <span class="preview"><img id="sigPreview" src="<?= h($sigSrc) ?>" alt=""></span>
+        <span class="drop-txt">Aláírás cseréje: kattints vagy húzd ide</span>
+        <input type="file" name="signature" id="sigInput" accept="image/png,image/jpeg,image/webp">
       </label>
       <h2>Elérhetőség</h2>
       <div class="grid2">
@@ -417,7 +456,7 @@ $uploadLimit = ini_get('upload_max_filesize');
         </div>
         <div class="ops">
           <a class="btn" href="index.php?a=edit&amp;id=<?= h(urlencode($p['id'])) ?>">Szerkesztés</a>
-          <form method="post" action="index.php?a=delete" onsubmit="return confirm(<?= h(json_encode('Biztosan törlöd: ' . ($p['title']['hu'] ?? '') . '?', JSON_UNESCAPED_UNICODE)) ?>);">
+          <form method="post" action="index.php?a=delete" class="js-confirm" data-confirm="<?= h('Biztosan törlöd: ' . ($p['title']['hu'] ?? '') . '?') ?>">
             <input type="hidden" name="csrf" value="<?= h(csrf()) ?>"><input type="hidden" name="id" value="<?= h($p['id']) ?>">
             <button class="btn danger">Törlés</button>
           </form>
