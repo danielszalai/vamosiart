@@ -12,6 +12,7 @@ date_default_timezone_set('Europe/Budapest');
 const ROOT      = __DIR__ . '/..';
 const DATA_FILE = ROOT . '/data/paintings.json';
 const SITE_FILE = ROOT . '/data/site.json';
+const IMP_FILE  = ROOT . '/data/impressum.json';
 const UPLOADS   = ROOT . '/uploads';
 const PASS_FILE = __DIR__ . '/jelszo.php';
 const MAX_UPLOAD = 25 * 1024 * 1024;
@@ -238,6 +239,16 @@ if ($logged && $_SERVER['REQUEST_METHOD'] === 'POST') {
     write_json(SITE_FILE, $site);
     flash('Főoldal elmentve.'); go('a=texts');
   }
+  if ($action === 'imprint') {
+    $f = function ($k, $max = 200) { return trim(mb_substr((string)($_POST[$k] ?? ''), 0, $max)); };
+    $imp = ['name' => $f('name'), 'activity' => $f('activity'), 'co' => $f('co'), 'street' => $f('street'),
+            'zip' => $f('zip', 20), 'city' => $f('city'), 'country' => $f('country'), 'email' => $f('email'),
+            'phone' => $f('phone', 50), 'vatId' => $f('vatId', 40), 'extra' => $f('extra', 2000)];
+    if ($imp['name'] === '') fail('A név kötelező.');
+    if ($imp['email'] !== '' && !filter_var($imp['email'], FILTER_VALIDATE_EMAIL)) fail('Az e-mail-cím formátuma nem jó.');
+    write_json(IMP_FILE, $imp);
+    flash('Impresszum elmentve. Az Impresszum és az Adatvédelem oldal azonnal frissült.'); go('a=imprint');
+  }
   if ($action === 'password') {
     $hash = require PASS_FILE;
     if (!password_verify((string)($_POST['old'] ?? ''), (string)$hash)) { flash('A jelenlegi jelszó nem jó.', 'err'); go('a=password'); }
@@ -268,6 +279,7 @@ $uploadLimit = ini_get('upload_max_filesize');
   <nav>
     <a href="index.php" class="<?= in_array($action, ['list', 'edit'], true) ? 'on' : '' ?>">Festmények</a>
     <a href="index.php?a=texts" class="<?= $action === 'texts' ? 'on' : '' ?>">Főoldal</a>
+    <a href="index.php?a=imprint" class="<?= $action === 'imprint' ? 'on' : '' ?>">Impresszum</a>
     <a href="../index.html" target="_blank">Oldal megnyitása ↗</a>
     <a href="index.php?a=password" class="<?= $action === 'password' ? 'on' : '' ?>">Jelszó</a>
     <a href="index.php?a=logout">Kilépés</a>
@@ -412,6 +424,48 @@ $uploadLimit = ini_get('upload_max_filesize');
         <label>🇩🇪 Német<textarea name="commission_de" rows="4"><?= h($t('commission', 'de')) ?></textarea></label>
       </div>
       <div class="actions"><button class="btn primary">Mentés</button></div>
+    </form>
+  </section>
+
+<?php elseif ($action === 'imprint'):
+  $imp = read_json(IMP_FILE, []);
+  $iv = function ($k) use ($imp) { return h($imp[$k] ?? ''); };
+?>
+  <section class="box">
+    <h1>Impresszum (Impressum)</h1>
+    <p>Ezek az adatok a német törvény (§ 5 DDG) miatt kellenek. Az <b>Impresszum</b> és az <b>Adatvédelem</b> oldalon jelennek meg, mindhárom nyelven. A Google ezeket az oldalakat nem indexeli, így a cím a keresési találatok között nem jelenik meg.</p>
+    <div class="note">
+      <b>Milyen cím jó?</b> Olyan valódi cím, ahol elérhető vagy, és ahol a hivatalos levél is eljut hozzád.
+      Postafiók vagy Packstation <b>nem jó</b>. Lehet a saját címed, annak a helynek a címe, ahol ténylegesen dolgozol
+      (pl. a szalon, ha ott a neveddel kézbesíthetnek neked), vagy egy fizetős impresszum-szolgáltató c/o-címe.
+    </div>
+    <form method="post" action="index.php?a=imprint">
+      <input type="hidden" name="csrf" value="<?= h(csrf()) ?>">
+      <div class="grid2">
+        <div>
+          <label>Név <b>*</b><input name="name" value="<?= $iv('name') ?>" required placeholder="Tamás Vámosi"></label>
+          <label>Tevékenység (németül)<input name="activity" value="<?= $iv('activity') ?>" placeholder="Kunstmaler und Tätowierer"></label>
+          <label>c/o sor <small>(csak ha szalon vagy impresszum-szolgáltató címét használod)</small><input name="co" value="<?= $iv('co') ?>" placeholder="c/o Tattoostudio XY"></label>
+          <label>Utca, házszám<input name="street" value="<?= $iv('street') ?>" placeholder="Musterstraße 1"></label>
+          <div class="row">
+            <label>Irányítószám<input name="zip" value="<?= $iv('zip') ?>" placeholder="59379"></label>
+            <label>Város<input name="city" value="<?= $iv('city') ?>" placeholder="Selm"></label>
+          </div>
+          <label>Ország<input name="country" value="<?= $iv('country') ?>" placeholder="Deutschland"></label>
+        </div>
+        <div>
+          <label>E-mail<input type="email" name="email" value="<?= $iv('email') ?>"></label>
+          <label>Telefon <small>(nem kötelező)</small><input name="phone" value="<?= $iv('phone') ?>" placeholder="+49 …"></label>
+          <label>Közösségi adószám / USt-IdNr. <small>(csak ha van)</small><input name="vatId" value="<?= $iv('vatId') ?>" placeholder="DE…"></label>
+          <label>Kiegészítő szöveg <small>(nem kötelező, pl. „Kleinunternehmer gemäß § 19 UStG”)</small><textarea name="extra" rows="5"><?= $iv('extra') ?></textarea></label>
+        </div>
+      </div>
+      <p class="hint">Amíg az utca nincs kitöltve, az oldalon „Die Anbieterangaben werden derzeit ergänzt” felirat látszik.</p>
+      <div class="actions">
+        <button class="btn primary">Mentés</button>
+        <a class="btn" href="../de/impressum.html" target="_blank">Impressum megtekintése ↗</a>
+        <a class="btn" href="../de/datenschutz.html" target="_blank">Datenschutz megtekintése ↗</a>
+      </div>
     </form>
   </section>
 

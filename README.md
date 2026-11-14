@@ -67,11 +67,20 @@ Az admin védelmei: jelszó erős titkosítással tárolva (bcrypt), IP-címenk�
 kiléptetés 2 óra tétlenség után, CSRF-védelem minden űrlapon, szigorú CSP fejléc, a feltöltött fájlok csak képek lehetnek
 (tartalom alapján ellenőrizve, a fájlnevet a rendszer adja), és az `uploads/` mappában semmilyen kód nem futtatható.
 
+## Impresszum és adatvédelem
+
+- Oldalak: `impresszum.html`, `adatvedelem.html`, `en/imprint.html`, `en/privacy.html`, `de/impressum.html`, `de/datenschutz.html`.
+- Az adatokat (név, cím, e-mail stb.) az admin **Impresszum** menüjében lehet megadni (`data/impressum.json`).
+- Ezek az oldalak `noindex`-esek (meta + `X-Robots-Tag` fejléc), és nincsenek benne a sitemapben, így a Google nem indexeli őket.
+  A `robots.txt` szándékosan NEM tiltja őket, mert akkor a Google nem látná a noindex jelzést.
+- A jogilag irányadó a német változat; a magyar és angol fordítás.
+
 ## Admin használata (Tamásnak)
 
 - **Új festmény:** kép kiválasztása (telefonos fotó is jó, magától kicsinyít), cím, évszám, méret, technika.
 - **Eladó** pipa: ár, vagy ár helyett szöveg (pl. „Ár érdeklődésre”). Az **Eladva** pipával a kép „Eladva” felirattal marad az oldalon.
 - **Fordítás:** az angol és a német cím nem kötelező. Ha üres, a magyar jelenik meg. A listából választott technikát magától lefordítja.
+- **Impresszum** menü: név, cím, elérhetőség a német Impressumhoz és az adatvédelmi oldalhoz.
 - **Főoldal** menü: főoldali kép, aláírás, bemutatkozás három nyelven, portréfestés szöveg, e-mail, Instagram link.
 - **Sorrend:** a Festmények oldalon növekvő évszám szerint (legrégebbi elöl), éven belül feltöltési sorrendben.
 - Részletes, Tamásnak szóló kezelési útmutató: külön dokumentumban.

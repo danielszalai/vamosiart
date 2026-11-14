@@ -70,3 +70,5 @@ details.tr[open] summary{margin-bottom:16px}
 .sig-drop{min-height:120px;max-width:420px;margin-bottom:10px;background:#f3f1f4}
 .sig-drop .preview img{max-height:120px;box-shadow:none;mix-blend-mode:multiply}
 h2.first{margin-top:0}
+.note{background:#f5efe2;border:1px solid #e6dcc3;color:#5a4a22;border-radius:8px;padding:12px 14px;margin:0 0 20px;font-size:.92rem;line-height:1.55}
+label small{color:var(--muted)}

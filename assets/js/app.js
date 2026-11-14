@@ -200,6 +200,36 @@
     $all(".img-btn", box).forEach(function (b) { b.addEventListener("click", function () { openLB(+b.dataset.i); }); });
   }
 
+  /* ---------- Impressum / Datenschutz: üzemeltetői adatok a data/impressum.json-ból ---------- */
+  var IMPL = {
+    de: { email: "E-Mail", phone: "Telefon", vatH: "Umsatzsteuer-ID", vat: "Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz", missing: "Die Anbieterangaben werden derzeit ergänzt." },
+    en: { email: "E-mail", phone: "Phone", vatH: "VAT ID", vat: "VAT identification number (§ 27a UStG)", missing: "The provider details are being updated." },
+    hu: { email: "E-mail", phone: "Telefon", vatH: "Adószám", vat: "Közösségi adószám (USt-IdNr.)", missing: "Az üzemeltetői adatok feltöltése folyamatban." }
+  };
+  function renderImp(d) {
+    var L = IMPL[state.lang] || IMPL.de;
+    var html = {
+      address: function () {
+        if (!d.street) return '<p class="imp-missing">' + esc(L.missing) + "</p>";
+        var lines = [d.name, d.activity, d.co, d.street, [d.zip, d.city].filter(Boolean).join(" "), d.country]
+          .filter(function (x) { return x && String(x).trim(); });
+        return "<p>" + lines.map(esc).join("<br>") + "</p>";
+      },
+      contact: function () {
+        var o = [];
+        if (d.email) o.push(esc(L.email) + ': <a href="mailto:' + esc(d.email) + '">' + esc(d.email) + "</a>");
+        if (d.phone) o.push(esc(L.phone) + ": " + esc(d.phone));
+        return o.length ? "<p>" + o.join("<br>") + "</p>" : "";
+      },
+      vat: function () { return d.vatId ? "<h2>" + esc(L.vatH) + "</h2><p>" + esc(L.vat) + ": " + esc(d.vatId) + "</p>" : ""; },
+      extra: function () {
+        var x = (d.extra || "").trim();
+        return x ? x.split(/\n\s*\n/).map(function (p) { return "<p>" + esc(p.trim()).replace(/\n/g, "<br>") + "</p>"; }).join("") : "";
+      }
+    };
+    $all(".js-imp").forEach(function (el) { var f = html[el.getAttribute("data-kind")]; if (f) el.innerHTML = f(); });
+  }
+
   /* ---------- Nagyító ---------- */
   var lb = $("#lightbox"), lbImg = lb && $(".lb-stage img", lb), lastFocus = null;
   function showLB() {
@@ -279,5 +309,6 @@
     if (box) box.innerHTML = '<p class="empty" style="grid-column:1/-1">' + esc(t("loadError")) + "</p>";
     state.failed = true;
   }));
+  if (page === "imprint" || page === "privacy") jobs.push(getJSON(ROOT + "data/impressum.json").then(renderImp).catch(function () {}));
   Promise.all(jobs).then(function () { if (!state.failed) { state.ready = true; render(); } else renderHome(); });
 })();

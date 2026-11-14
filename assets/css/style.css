@@ -201,3 +201,12 @@ body.lb-lock{overflow:hidden}
   .reveal.in{opacity:1;transform:none}
 }
 .spacer{height:60px}
+
+/* ---------- Impressum / Datenschutz ---------- */
+.legal{max-width:760px;padding-bottom:90px}
+.legal h2{font-size:1.5rem;margin:34px 0 10px;color:var(--lilac-deep)}
+.legal p{margin:0 0 14px;color:#3c3746}
+.legal-note{font-size:.88rem;color:var(--muted);font-style:italic;border-left:2px solid var(--teal);padding-left:14px}
+.legal-stand{margin-top:34px;font-size:.85rem;color:var(--muted)}
+.imp-missing{color:var(--muted);font-style:italic}
+.legal-links{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
