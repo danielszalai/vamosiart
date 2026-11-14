@@ -1,0 +1,340 @@
+{
+  "paintings": [
+    {
+      "id": "minta-01",
+      "year": 2025,
+      "title": {
+        "hu": "Csendes mező",
+        "en": "Quiet Field",
+        "de": "Stilles Feld"
+      },
+      "image": "uploads/minta-01.jpg",
+      "thumb": "uploads/thumbs/minta-01.jpg",
+      "width": 1500,
+      "height": 1900,
+      "size": "50 × 70 cm",
+      "technique": {
+        "hu": "olaj, vászon",
+        "en": "oil on canvas",
+        "de": "Öl auf Leinwand"
+      },
+      "forSale": true,
+      "sold": false,
+      "price": "180 000 Ft",
+      "priceNote": {
+        "hu": "",
+        "en": "",
+        "de": ""
+      },
+      "added": "2025-01-15T12:00:00"
+    },
+    {
+      "id": "minta-02",
+      "year": 2025,
+      "title": {
+        "hu": "Hajnali áramlás",
+        "en": "Dawn Current",
+        "de": "Morgenströmung"
+      },
+      "image": "uploads/minta-02.jpg",
+      "thumb": "uploads/thumbs/minta-02.jpg",
+      "width": 1900,
+      "height": 1500,
+      "size": "70 × 50 cm",
+      "technique": {
+        "hu": "akril, vászon",
+        "en": "acrylic on canvas",
+        "de": "Acryl auf Leinwand"
+      },
+      "forSale": false,
+      "sold": false,
+      "price": "",
+      "priceNote": {
+        "hu": "",
+        "en": "",
+        "de": ""
+      },
+      "added": "2025-02-15T12:00:00"
+    },
+    {
+      "id": "minta-03",
+      "year": 2024,
+      "title": {
+        "hu": "Körforgás",
+        "en": "Circulation",
+        "de": "Kreislauf"
+      },
+      "image": "uploads/minta-03.jpg",
+      "thumb": "uploads/thumbs/minta-03.jpg",
+      "width": 1600,
+      "height": 1600,
+      "size": "60 × 60 cm",
+      "technique": {
+        "hu": "olaj, vászon",
+        "en": "oil on canvas",
+        "de": "Öl auf Leinwand"
+      },
+      "forSale": true,
+      "sold": false,
+      "price": "150 000 Ft",
+      "priceNote": {
+        "hu": "",
+        "en": "",
+        "de": ""
+      },
+      "added": "2024-03-15T12:00:00"
+    },
+    {
+      "id": "minta-04",
+      "year": 2024,
+      "title": {
+        "hu": "Lila rétegek",
+        "en": "Violet Layers",
+        "de": "Violette Schichten"
+      },
+      "image": "uploads/minta-04.jpg",
+      "thumb": "uploads/thumbs/minta-04.jpg",
+      "width": 1400,
+      "height": 2000,
+      "size": "40 × 60 cm",
+      "technique": {
+        "hu": "akril, vászon",
+        "en": "acrylic on canvas",
+        "de": "Acryl auf Leinwand"
+      },
+      "forSale": true,
+      "sold": true,
+      "price": "220 000 Ft",
+      "priceNote": {
+        "hu": "",
+        "en": "",
+        "de": ""
+      },
+      "added": "2024-04-15T12:00:00"
+    },
+    {
+      "id": "minta-05",
+      "year": 2024,
+      "title": {
+        "hu": "Ecsetvonások I.",
+        "en": "Brushstrokes I",
+        "de": "Pinselstriche I"
+      },
+      "image": "uploads/minta-05.jpg",
+      "thumb": "uploads/thumbs/minta-05.jpg",
+      "width": 2000,
+      "height": 1400,
+      "size": "80 × 60 cm",
+      "technique": {
+        "hu": "olaj, vászon",
+        "en": "oil on canvas",
+        "de": "Öl auf Leinwand"
+      },
+      "forSale": false,
+      "sold": false,
+      "price": "",
+      "priceNote": {
+        "hu": "",
+        "en": "",
+        "de": ""
+      },
+      "added": "2024-05-15T12:00:00"
+    },
+    {
+      "id": "minta-06",
+      "year": 2023,
+      "title": {
+        "hu": "Távoli part",
+        "en": "Distant Shore",
+        "de": "Ferne Küste"
+      },
+      "image": "uploads/minta-06.jpg",
+      "thumb": "uploads/thumbs/minta-06.jpg",
+      "width": 1500,
+      "height": 1900,
+      "size": "50 × 70 cm",
+      "technique": {
+        "hu": "akril, vászon",
+        "en": "acrylic on canvas",
+        "de": "Acryl auf Leinwand"
+      },
+      "forSale": true,
+      "sold": false,
+      "price": "",
+      "priceNote": {
+        "hu": "Ár érdeklődésre",
+        "en": "Price on request",
+        "de": "Preis auf Anfrage"
+      },
+      "added": "2023-06-15T12:00:00"
+    },
+    {
+      "id": "minta-07",
+      "year": 2023,
+      "title": {
+        "hu": "Egyensúly",
+        "en": "Balance",
+        "de": "Gleichgewicht"
+      },
+      "image": "uploads/minta-07.jpg",
+      "thumb": "uploads/thumbs/minta-07.jpg",
+      "width": 1500,
+      "height": 1900,
+      "size": "50 × 70 cm",
+      "technique": {
+        "hu": "olaj, vászon",
+        "en": "oil on canvas",
+        "de": "Öl auf Leinwand"
+      },
+      "forSale": true,
+      "sold": false,
+      "price": "260 000 Ft",
+      "priceNote": {
+        "hu": "",
+        "en": "",
+        "de": ""
+      },
+      "added": "2023-07-15T12:00:00"
+    },
+    {
+      "id": "minta-08",
+      "year": 2022,
+      "title": {
+        "hu": "Márvány álom",
+        "en": "Marble Dream",
+        "de": "Marmortraum"
+      },
+      "image": "uploads/minta-08.jpg",
+      "thumb": "uploads/thumbs/minta-08.jpg",
+      "width": 1900,
+      "height": 1500,
+      "size": "70 × 50 cm",
+      "technique": {
+        "hu": "akril, vászon",
+        "en": "acrylic on canvas",
+        "de": "Acryl auf Leinwand"
+      },
+      "forSale": false,
+      "sold": false,
+      "price": "",
+      "priceNote": {
+        "hu": "",
+        "en": "",
+        "de": ""
+      },
+      "added": "2022-08-15T12:00:00"
+    },
+    {
+      "id": "minta-09",
+      "year": 2022,
+      "title": {
+        "hu": "Ecsetvonások II.",
+        "en": "Brushstrokes II",
+        "de": "Pinselstriche II"
+      },
+      "image": "uploads/minta-09.jpg",
+      "thumb": "uploads/thumbs/minta-09.jpg",
+      "width": 1600,
+      "height": 1600,
+      "size": "60 × 60 cm",
+      "technique": {
+        "hu": "olaj, vászon",
+        "en": "oil on canvas",
+        "de": "Öl auf Leinwand"
+      },
+      "forSale": true,
+      "sold": true,
+      "price": "95 000 Ft",
+      "priceNote": {
+        "hu": "",
+        "en": "",
+        "de": ""
+      },
+      "added": "2022-09-15T12:00:00"
+    },
+    {
+      "id": "minta-10",
+      "year": 2021,
+      "title": {
+        "hu": "Alkonyi sáv",
+        "en": "Dusk Band",
+        "de": "Abendstreifen"
+      },
+      "image": "uploads/minta-10.jpg",
+      "thumb": "uploads/thumbs/minta-10.jpg",
+      "width": 1400,
+      "height": 2000,
+      "size": "40 × 60 cm",
+      "technique": {
+        "hu": "akril, vászon",
+        "en": "acrylic on canvas",
+        "de": "Acryl auf Leinwand"
+      },
+      "forSale": false,
+      "sold": false,
+      "price": "",
+      "priceNote": {
+        "hu": "",
+        "en": "",
+        "de": ""
+      },
+      "added": "2021-01-15T12:00:00"
+    },
+    {
+      "id": "minta-11",
+      "year": 2021,
+      "title": {
+        "hu": "Pontok és ívek",
+        "en": "Dots and Arcs",
+        "de": "Punkte und Bögen"
+      },
+      "image": "uploads/minta-11.jpg",
+      "thumb": "uploads/thumbs/minta-11.jpg",
+      "width": 2000,
+      "height": 1400,
+      "size": "80 × 60 cm",
+      "technique": {
+        "hu": "olaj, vászon",
+        "en": "oil on canvas",
+        "de": "Öl auf Leinwand"
+      },
+      "forSale": true,
+      "sold": false,
+      "price": "140 000 Ft",
+      "priceNote": {
+        "hu": "",
+        "en": "",
+        "de": ""
+      },
+      "added": "2021-02-15T12:00:00"
+    },
+    {
+      "id": "minta-12",
+      "year": 2020,
+      "title": {
+        "hu": "Türkiz mélység",
+        "en": "Turquoise Depth",
+        "de": "Türkise Tiefe"
+      },
+      "image": "uploads/minta-12.jpg",
+      "thumb": "uploads/thumbs/minta-12.jpg",
+      "width": 1500,
+      "height": 1900,
+      "size": "50 × 70 cm",
+      "technique": {
+        "hu": "akril, vászon",
+        "en": "acrylic on canvas",
+        "de": "Acryl auf Leinwand"
+      },
+      "forSale": false,
+      "sold": false,
+      "price": "",
+      "priceNote": {
+        "hu": "",
+        "en": "",
+        "de": ""
+      },
+      "added": "2020-03-15T12:00:00"
+    }
+  ]
+}
