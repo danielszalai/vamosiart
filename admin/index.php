@@ -198,8 +198,15 @@ if ($logged && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($ig !== '' && !preg_match('~^https?://~i', $ig)) $ig = 'https://' . $ig;
     $site['email'] = $email; $site['instagram'] = $ig;
     $site['intro'] = tri('intro'); $site['commission'] = tri('commission');
+    $img = save_image($_FILES['homeImage'] ?? [], UPLOADS . '/fokep-' . substr(bin2hex(random_bytes(3)), 0, 5), 1800);
+    if ($img) {
+      $old = (string)($site['homeImage'] ?? '');
+      if (strpos($old, 'uploads/fokep-') === 0) delete_files(['image' => $old]);
+      $site['homeImage'] = 'uploads/' . $img['file'];
+      $site['homeImageWidth'] = $img['w']; $site['homeImageHeight'] = $img['h'];
+    }
     write_json(SITE_FILE, $site);
-    flash('Szövegek elmentve.'); go('a=texts');
+    flash('Főoldal elmentve.'); go('a=texts');
   }
   if ($action === 'password') {
     $hash = require PASS_FILE;
@@ -230,7 +237,7 @@ $uploadLimit = ini_get('upload_max_filesize');
   <?php if ($logged): ?>
   <nav>
     <a href="index.php" class="<?= in_array($action, ['list', 'edit'], true) ? 'on' : '' ?>">Festmények</a>
-    <a href="index.php?a=texts" class="<?= $action === 'texts' ? 'on' : '' ?>">Szövegek</a>
+    <a href="index.php?a=texts" class="<?= $action === 'texts' ? 'on' : '' ?>">Főoldal</a>
     <a href="../index.html" target="_blank">Oldal megnyitása ↗</a>
     <a href="index.php?a=password" class="<?= $action === 'password' ? 'on' : '' ?>">Jelszó</a>
     <a href="index.php?a=logout">Kilépés</a>
@@ -337,9 +344,17 @@ $uploadLimit = ini_get('upload_max_filesize');
   $t = function ($k, $l) use ($site) { return $site[$k][$l] ?? ''; };
 ?>
   <section class="box">
-    <h1>Főoldali szövegek</h1>
-    <form method="post" action="index.php?a=texts">
+    <h1>Főoldal</h1>
+    <form method="post" action="index.php?a=texts" enctype="multipart/form-data" id="homeForm">
       <input type="hidden" name="csrf" value="<?= h(csrf()) ?>">
+      <h2 style="margin-top:0">Főoldali kép</h2>
+      <p class="hint">A bemutatkozás mellett álló kép. Álló formátum mutat a legjobban.</p>
+      <label class="drop home-drop" id="homeDrop">
+        <span class="preview"><img id="homePreview" src="<?= !empty($site['homeImage']) ? '../' . h($site['homeImage']) : '' ?>" alt="" <?= empty($site['homeImage']) ? 'hidden' : '' ?>></span>
+        <span class="drop-txt">Kép cseréje: kattints vagy húzd ide</span>
+        <input type="file" name="homeImage" id="homeInput" accept="image/jpeg,image/png,image/webp">
+      </label>
+      <h2>Elérhetőség</h2>
       <div class="grid2">
         <label>E-mail-cím (ide írhatnak a látogatók)<input type="email" name="email" value="<?= h($site['email'] ?? '') ?>"></label>
         <label>Instagram link<input name="instagram" value="<?= h($site['instagram'] ?? '') ?>" placeholder="https://www.instagram.com/..."></label>

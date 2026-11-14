@@ -5,7 +5,7 @@ Egyszerű, adatbázis nélküli weboldal (HTML + CSS + JS) egy PHP-s admin felü
 ## Felépítés
 
 ```
-index.html          Főoldal (portré, aláírás, bemutatkozás, kapcsolat)
+index.html          Főoldal (festmény, aláírás, bemutatkozás, kapcsolat)
 festmenyek.html     Galéria évszám szerint, kattintásra nagyítás
 elado.html          Eladó művek (ár / ár helyett szöveg / „Eladva”)
 assets/             Stílus, JavaScript, betűtípusok, zászlók, portré, aláírás
@@ -29,9 +29,8 @@ Az **admin felület ott nem fut**, mert a GitHub Pages nem futtat PHP-t. Az elő
 2. Állíts írási jogot (755, ha nem megy, 775) erre a négy mappára: `data/`, `uploads/`, `uploads/thumbs/`, `admin/`.
 3. **Azonnal** nyisd meg a `https://vamosiart.hu/admin/` címet, és add meg a jelszót. Az első látogató állítja be, ezért ezt ne halaszd el!
 4. Töröld a mintaképeket: az adminban egyenként, vagy FTP-n írd felül a `data/paintings.json` tartalmát erre: `{"paintings": []}`, és töröld az `uploads/minta-*.jpg` és `uploads/thumbs/minta-*.jpg` fájlokat.
-5. Cseréld le a helyőrző képeket:
-   - `assets/img/portre.jpg` – Tamás fotója (álló, kb. 4:5 arányú, 1000–1400 px széles)
-   - `assets/img/alairas.png` – az aláírás, **átlátszó háttérrel**, sötét tintával
+5. Cseréld le az aláírás helyőrzőjét: `assets/img/alairas.png`, **átlátszó háttérrel**, sötét tintával.
+   A főoldali festményt Tamás maga is lecserélheti az adminban (Főoldal menü).
 
 ### ⚠️ Fontos az élesítés után
 
@@ -43,7 +42,9 @@ Kód módosításakor csak az `assets/`, az `admin/` és a `*.html` fájlokat t�
 - **Új festmény:** kép kiválasztása (telefonos fotó is jó, magától kicsinyít), cím, évszám, méret, technika.
 - **Eladó** pipa: ár, vagy ár helyett szöveg (pl. „Ár érdeklődésre”). Az **Eladva** pipával a kép „Eladva” felirattal marad az oldalon.
 - **Fordítás:** az angol és a német cím nem kötelező. Ha üres, a magyar jelenik meg. A listából választott technikát magától lefordítja.
-- **Szövegek** fül: bemutatkozás három nyelven, portréfestés szöveg, e-mail, Instagram link.
+- **Főoldal** menü: főoldali kép, bemutatkozás három nyelven, portréfestés szöveg, e-mail, Instagram link.
+- **Sorrend:** a Festmények oldalon növekvő évszám szerint (legrégebbi elöl), éven belül feltöltési sorrendben.
+- Részletes, Tamásnak szóló kezelési útmutató: külön dokumentumban.
 - Minden mentéskor a rendszer biztonsági másolatot készít az előző állapotról: `data/paintings.bak.json`.
 
 ## Elfelejtett jelszó

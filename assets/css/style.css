@@ -96,7 +96,7 @@ h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.15;letter-spacin
 .hero .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:80px;align-items:center}
 .portrait{position:relative;margin:0}
 .portrait::before{content:"";position:absolute;inset:22px -22px -22px 22px;border:1px solid var(--teal);z-index:0}
-.portrait img{position:relative;z-index:1;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;background:var(--lilac-soft)}
+.portrait img{position:relative;z-index:1;width:100%;height:auto;background:var(--lilac-soft);box-shadow:0 2px 4px rgba(43,39,51,.06),0 18px 40px -20px rgba(43,39,51,.45)}
 .eyebrow{font-size:.76rem;letter-spacing:.24em;text-transform:uppercase;color:var(--lilac);margin:0 0 18px}
 .signature{width:min(420px,90%);height:auto;display:block;margin:0 0 28px -6px}
 .intro p{margin:0 0 1.1em;max-width:34em;font-size:1.06rem;color:#3c3746}

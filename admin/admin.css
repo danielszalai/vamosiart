@@ -65,3 +65,5 @@ details.tr[open] summary{margin-bottom:16px}
 .tag.tr{background:#f5efe2;color:#7a6330}
 .empty{color:var(--muted);font-style:italic;padding:20px 0}
 @media(max-width:600px){.plist li{flex-wrap:wrap}.plist .ops{width:100%}.plist .ops .btn{flex:1;text-align:center}.plist .ops form{flex:1;display:flex}.plist .ops form .btn{flex:1}}
+.home-drop{min-height:200px;max-width:420px;margin-bottom:10px}
+.home-drop .preview img{max-height:280px}

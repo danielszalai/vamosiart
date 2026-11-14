@@ -1,6 +1,27 @@
 /* Admin segéd: képelőnézet, automatikus kicsinyítés a böngészőben, fordítási tippek */
 (function () {
   "use strict";
+  /* Főoldali kép: előnézet + kicsinyítés */
+  var homeForm = document.getElementById("homeForm");
+  if (homeForm) {
+    var hi = document.getElementById("homeInput"), hp = document.getElementById("homePreview");
+    hi.addEventListener("change", function () { if (hi.files[0]) { hp.src = URL.createObjectURL(hi.files[0]); hp.hidden = false; } });
+    homeForm.addEventListener("submit", function (e) {
+      var f = hi.files && hi.files[0];
+      if (!f || !window.createImageBitmap || !window.DataTransfer) return;
+      e.preventDefault();
+      createImageBitmap(f, { imageOrientation: "from-image" }).then(function (bmp) {
+        var r = Math.min(1, 1800 / Math.max(bmp.width, bmp.height)), c = document.createElement("canvas");
+        c.width = Math.round(bmp.width * r); c.height = Math.round(bmp.height * r);
+        c.getContext("2d").drawImage(bmp, 0, 0, c.width, c.height);
+        c.toBlob(function (b) {
+          var dt = new DataTransfer(); dt.items.add(new File([b], "fokep.jpg", { type: "image/jpeg" }));
+          hi.files = dt.files; homeForm.submit();
+        }, "image/jpeg", 0.88);
+      }).catch(function () { homeForm.submit(); });
+    });
+  }
+
   var form = document.getElementById("paintingForm");
   if (!form) return;
 

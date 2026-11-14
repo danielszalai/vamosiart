@@ -13,7 +13,7 @@
       "nav.home": "Kezdőlap", "nav.paintings": "Festmények", "nav.sale": "Eladó művek",
       "footer.rights": "Minden jog fenntartva.",
       "home.eyebrow": "Festőművész · Tetoválóművész",
-      "home.portraitAlt": "Vámosi Tamás festőművész",
+      "home.portraitAlt": "Vámosi Tamás festménye",
       "home.ctaPaintings": "Festmények", "home.ctaSale": "Eladó művek",
       "home.commissionTitle": "Portré fénykép alapján",
       "home.contactTitle": "Kapcsolat",
@@ -33,7 +33,7 @@
       "nav.home": "Home", "nav.paintings": "Paintings", "nav.sale": "For sale",
       "footer.rights": "All rights reserved.",
       "home.eyebrow": "Painter · Tattoo artist",
-      "home.portraitAlt": "Painter Tamás Vámosi",
+      "home.portraitAlt": "A painting by Tamás Vámosi",
       "home.ctaPaintings": "Paintings", "home.ctaSale": "For sale",
       "home.commissionTitle": "Portraits from photographs",
       "home.contactTitle": "Contact",
@@ -53,7 +53,7 @@
       "nav.home": "Startseite", "nav.paintings": "Gemälde", "nav.sale": "Zu verkaufen",
       "footer.rights": "Alle Rechte vorbehalten.",
       "home.eyebrow": "Maler · Tätowierer",
-      "home.portraitAlt": "Der Maler Tamás Vámosi",
+      "home.portraitAlt": "Ein Gemälde von Tamás Vámosi",
       "home.ctaPaintings": "Gemälde", "home.ctaSale": "Zu verkaufen",
       "home.commissionTitle": "Porträts nach Fotovorlage",
       "home.contactTitle": "Kontakt",
@@ -144,13 +144,18 @@
       return "<p>" + esc(p.trim()).replace(/\n/g, "<br>") + "</p>";
     }).join("");
     var c = $(".js-commission"); if (c) c.textContent = loc(state.site.commission);
+    var hi = $(".js-home-image");
+    if (hi && state.site.homeImage && hi.getAttribute("src") !== state.site.homeImage) {
+      hi.src = state.site.homeImage;
+      if (state.site.homeImageWidth) { hi.width = state.site.homeImageWidth; hi.height = state.site.homeImageHeight; }
+    }
     var ig = $(".js-instagram");
     if (ig) { if (state.site.instagram) { ig.href = state.site.instagram; ig.hidden = false; } else ig.hidden = true; }
   }
 
   function sorted(list) {
     return list.slice().sort(function (a, b) {
-      return (b.year - a.year) || String(b.added || "").localeCompare(String(a.added || ""));
+      return (a.year - b.year) || String(a.added || "").localeCompare(String(b.added || "")); // növekvő évszám
     });
   }
 
